@@ -1,5 +1,8 @@
 package engineTester;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import models.RawModel;
 import models.TexturedModel;
 
@@ -14,8 +17,7 @@ import renderEngine.DisplayManager;
 import renderEngine.Loader;
 import renderEngine.MasterRenderer;
 import renderEngine.OBJLoader;
-import renderEngine.Renderer;
-import shaders.StaticShader;
+import terrains.Terrain;
 import textures.ModelTexture;
 
 public class MainGameLoop {
@@ -25,36 +27,42 @@ public class MainGameLoop {
 		DisplayManager.createDisplay();
 		Loader loader = new Loader();
 		
-		RawModel model = OBJLoader.loadObjModel("dragon", loader);
+		RawModel model = OBJLoader.loadObjModel("stall", loader);
 		
 		TexturedModel staticModel = new TexturedModel(model, new ModelTexture(loader.loadTexture("stallTexture")));
 		ModelTexture texture = staticModel.getTexture();
+		
 		texture.setShineDamper(10);
 		texture.setReflectivity(1);
 		
-		Entity entity = new Entity(staticModel, new Vector3f(0,-3,-50), 0, 0, 0, 1);
-		Light light = new Light(new Vector3f(0,-20,-20), new Vector3f(1,1,1));
+		List<Entity> entityList = new ArrayList<Entity>();
+		for(int i = 0; i < 75; i++){
+			Entity entity = new Entity(staticModel, new Vector3f(((float) (Math.random()*400))-200.0f ,0, ((float) (Math.random()*-400))), (float) (Math.random()*4)-2, (float) (Math.random()*360), 0, (float) (Math.random()*3));
+			entityList.add(entity);
+		}
+		Light light = new Light(new Vector3f(3000,2000,2000), new Vector3f(1,1,1));
+		
+		Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain2 = new Terrain(-1, 0, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain3 = new Terrain(-1, -1, loader, new ModelTexture(loader.loadTexture("grass")));
+		Terrain terrain4 = new Terrain(0, -1, loader, new ModelTexture(loader.loadTexture("grass")));
 		
 		Camera camera = new Camera();
 		
 		MasterRenderer renderer = new MasterRenderer();
 		while(!Display.isCloseRequested()){
-			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
-				entity.increaseRotation(1,0,0);
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
-				entity.increaseRotation(-1,0,0);
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
-				entity.increaseRotation(0,1,0);
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
-				entity.increaseRotation(0,-1,0);
-			}
-			renderer.processEntity(entity);
-			renderer.render(light, camera);
-			
 			camera.move();
+			
+			renderer.processTerrain(terrain);
+			renderer.processTerrain(terrain2);
+			renderer.processTerrain(terrain3);
+			renderer.processTerrain(terrain4);
+			for(Entity entity:entityList){
+				renderer.processEntity(entity);
+				entity.increaseRotation(0, entity.getRotX(), 0);
+			}
+			
+			renderer.render(light, camera);
 			DisplayManager.updateDispay();
 			
 		}

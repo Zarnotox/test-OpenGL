@@ -18,6 +18,7 @@ public class StaticShader extends ShaderProgram{
 	private int location_lichtColour;
 	private int location_shineDamper;
 	private int location_reflectivity;
+	private int location_fakeLighting;
 	
 	
 	public StaticShader() {
@@ -40,7 +41,11 @@ public class StaticShader extends ShaderProgram{
 		location_lichtColour = super.getUniformLocation("lightColour");
 		location_shineDamper = super.getUniformLocation("shineDamper");
 		location_reflectivity = super.getUniformLocation("reflectivity");
-		
+		location_fakeLighting = super.getUniformLocation("useFakeLighting");
+	}
+	
+	public void loadFakeLightingVariable(boolean useFake){
+		super.loadBoolean(location_fakeLighting, useFake);
 	}
 	
 	public void loadShineVariables(float damper, float reflectivity){

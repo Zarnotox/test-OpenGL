@@ -6,7 +6,6 @@ import java.util.List;
 import models.RawModel;
 import models.TexturedModel;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -44,8 +43,8 @@ public class MainGameLoop {
 		flower.getTexture().setUseFakeLighting(true);
 		
 		List<Entity> entityList = new ArrayList<Entity>();
-		for(int i = 0; i < 75; i++){
-			entityList.add(new Entity(stall, new Vector3f(((float) (Math.random()*400))-200.0f ,0, ((float) (Math.random()*-400))),
+		for(int i = 0; i < 150; i++){
+			entityList.add(new Entity(stall, new Vector3f(((float) (Math.random()*800))-400.0f ,0, ((float) (Math.random()*-800))),
 					(float) (Math.random()*4)-2, (float) (Math.random()*360), 0, (float) (Math.random()*3)));
 			entityList.add(new Entity(grass, new Vector3f(((float) (Math.random()*400))-200.0f ,0, ((float) (Math.random()*-400))),
 					0, 0, 0, (float) (Math.random()*3)));

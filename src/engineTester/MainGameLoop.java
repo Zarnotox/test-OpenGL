@@ -43,15 +43,18 @@ public class MainGameLoop {
 		flower.getTexture().setUseFakeLighting(true);
 		
 		List<Entity> entityList = new ArrayList<Entity>();
-		for(int i = 0; i < 150; i++){
-			entityList.add(new Entity(stall, new Vector3f(((float) (Math.random()*800))-400.0f ,0, ((float) (Math.random()*-800))),
-					(float) (Math.random()*4)-2, (float) (Math.random()*360), 0, (float) (Math.random()*3)));
+		for(int i = 0; i < 100; i++){
+			entityList.add(new Entity(stall, new Vector3f(((float) (Math.random()*800))-400.0f ,3, ((float) (Math.random()*-800))),
+					(float) (Math.random()*3)-1.5f, (float) (Math.random()*360), 0, (float) (Math.random()*3)));
 			entityList.add(new Entity(grass, new Vector3f(((float) (Math.random()*400))-200.0f ,0, ((float) (Math.random()*-400))),
-					0, 0, 0, (float) (Math.random()*3)));
+					(float) (Math.random()*2)-1, 0, 0, (float) (Math.random()*3)));
 			entityList.add(new Entity(flower, new Vector3f(((float) (Math.random()*400))-200.0f ,0, ((float) (Math.random()*-400))),
-					0, 0, 0, (float) (Math.random()*3)));
+					(float) (Math.random()*1.5f)-0.75f, 0, 0, (float) (Math.random()*3)));
 		}
 		Light light = new Light(new Vector3f(3000,5000,2000), new Vector3f(1,1,1));
+		for(int i = 0; i<20; i++){
+			entityList.add(new Entity(stall, new Vector3f(300,250-12.5f*i,200), (float) (Math.random() * 3) + 2, 0, 0, 4-i/10));
+		}
 		
 		Terrain terrain = new Terrain(0, 0, loader, new ModelTexture(loader.loadTexture("grass")));
 		Terrain terrain2 = new Terrain(-1, 0, loader, new ModelTexture(loader.loadTexture("grass")));
@@ -70,7 +73,8 @@ public class MainGameLoop {
 			renderer.processTerrain(terrain4);
 			for(Entity entity:entityList){
 				renderer.processEntity(entity);
-				entity.increaseRotation(0, entity.getRotX(), 0);
+				entity.increaseRotation(0, entity.getRotX()*5, entity.getRotX()*3);
+				entity.increasePosition((float) (10f*Math.sin(Math.toRadians(entity.getRotY()))) - entity.getPosition().x/2, (float) (2f*Math.sin(Math.toRadians(entity.getRotY()))), - entity.getPosition().z);
 			}
 			
 			renderer.render(light, camera);
